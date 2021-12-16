@@ -30,6 +30,11 @@ local function go_build()
   return build("go", { "build" })
 end
 
+local function python_run()
+  local curr_filename = vim.fn.expand('%')
+  return build("python", { curr_filename })
+end
+
 local function spawn_buffer(compile_func)
   -- check if buffer exists and yeet it
   local buf_key = vim.fn.bufnr('*COMPILE*')
@@ -58,6 +63,7 @@ end
 local filetype_compile = {
     ["rust"] = cargo_build,
     ["go"] = go_build,
+    ["python"] = python_run,
 }
 
 -- main function that gets exported
