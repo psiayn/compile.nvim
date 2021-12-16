@@ -1,12 +1,12 @@
 local api = vim.api
 local Job = require'plenary.job'
 
-local function cargo_build()
+local function build(command, args)
   -- write the entire result into an output buffer
   local output = {}
   local job = Job:new {
-    command = "cargo",
-    args = { "build" },
+    command = command,
+    args = args,
     on_stdout = function(err, line)
       table.insert(output, line)
       table.insert(output, err)
@@ -22,25 +22,12 @@ local function cargo_build()
   return output
 end
 
+local function cargo_build()
+  return build("cargo", { "build" })
+end
+
 local function go_build()
-  -- write the entire result into an output buffer
-  local output = {}
-  local job = Job:new {
-    command = "go",
-    args = { "build" },
-    on_stdout = function(err, line)
-      table.insert(output, line)
-      table.insert(output, err)
-    end,
-    on_stderr = function(err, line)
-      table.insert(output, line)
-      table.insert(output, err)
-    end,
-  }
-  -- wait for the job to finish
-  job:sync()
-  -- return it
-  return output
+  return build("go", { "build" })
 end
 
 local function spawn_buffer(compile_func)
